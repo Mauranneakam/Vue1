@@ -1,29 +1,35 @@
 <template>
   <div>
     <h2>Welcome to the Home Page!</h2>
-    <BaseButton color="primary" :isDisabled="false">Primary Button</BaseButton>
-    <BaseButton color="warn" :isDisabled="false">Warn Button</BaseButton>
-    <BaseButton color="danger" :isDisabled="false">Danger Button</BaseButton>
-    
-    
+    <div v-if="user">
+    <h1>Bienvenue, {{ user.name }} !</h1>
+  </div>
+  Cliquer pour ralentir ({{ clicks }} secondes d'attente) !
+
     <!-- Button with increasing wait time -->
     <AsyncButton :color="'primary'" :delay="clicks" @click="increaseClicks">
-      Cliquer pour ralentir ({{ clicks }} secondes d'attente) !
+      
     </AsyncButton>
-    <BaseButton color="primary" @click="signInWithMicrosoft">Sign In with Microsoft</BaseButton>
+    
   </div>
 </template>
 
 <script>
-import BaseButton from './BaseButton.vue';
+
 import AsyncButton from './AsyncButyon.vue';
 import { signInAndGetUser } from '../lib/microsoftGraph';
 
 export default {
   name: 'HomePage', 
 
+  props: {
+    user: {
+      type: Object,
+      default: null
+    }
+  },
   components: {
-    BaseButton, AsyncButton
+     AsyncButton
   },
   data() {
     return {
@@ -33,13 +39,13 @@ export default {
   
   methods: {
    
+    increaseClicks() {
+      this.clicks += 1; // Incrémente le compteur à chaque clic
+    },
     async signInWithMicrosoft() {
-      const user = await signInAndGetUser(); // Appelle la fonction signInAndGetUser
-      if (user) {
-        alert(`Connexion réussie ! Bienvenue, ${user.name}`);
-      } else {
-        alert('Échec de la connexion');
-      }
+      
+      const user = await signInAndGetUser();
+      this.$emit('user-signed-in', user);
     }
   }
 }
