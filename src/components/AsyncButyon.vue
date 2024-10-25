@@ -31,9 +31,8 @@ export default {
   },
   methods: {
     handleClick() {
-      if (!this.isPending) { // Empêche le clic si déjà en attente
-        this.isPending = true; // Active l'état de chargement
-        console.log(`Attente de ${this.delay} secondes...`);
+       if (!this.isPending) {
+        this.isPending = true;
         // Simule une action asynchrone avec un délai variable
         new Promise((resolve) => {
           setTimeout(() => {
@@ -41,7 +40,7 @@ export default {
           }, this.delay * 1000); // Utilise la prop delay pour définir le délai en millisecondes
         }).finally(() => {
           this.isPending = false; // Réactive le bouton après le délai
-          console.log("Chargement terminé");
+          
         });
       }
     }

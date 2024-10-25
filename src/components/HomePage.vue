@@ -18,14 +18,15 @@
 
 import AsyncButton from './AsyncButyon.vue';
 import { signInAndGetUser } from '../lib/microsoftGraph';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'HomePage', 
 
-  props: {
-    user: {
-      type: Object,
-      default: null
+  computed: {
+    ...mapGetters(['getUser']),
+    user() {
+      return this.getUser;
     }
   },
   components: {
@@ -38,14 +39,14 @@ export default {
   },
   
   methods: {
-   
+    ...mapMutations(['setUser']),
     increaseClicks() {
       this.clicks += 1; // Incrémente le compteur à chaque clic
     },
     async signInWithMicrosoft() {
       
-      const user = await signInAndGetUser();
-      this.$emit('user-signed-in', user);
+      const user = await (signInAndGetUser);
+      this.setUser(user);
     }
   }
 }
